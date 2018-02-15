@@ -174,9 +174,9 @@ services:
           - node.role == manager
       resources:
         limits:
-          memory: 2048M
+          memory: 500M
         reservations:
-          memory: 1024M
+          memory: 250M
 
   caddy:
     image: stefanprodan/caddy
@@ -205,7 +205,7 @@ services:
         reservations:
           memory: 64M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:3000"]
       interval: 5s
       timeout: 1s
       retries: 5
