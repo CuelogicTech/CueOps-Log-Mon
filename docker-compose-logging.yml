@@ -1,0 +1,112 @@
+version: '3.3'
+
+networks:
+  monitoring:
+    driver: overlay
+    attachable: true
+
+volumes:
+  esdata: {}
+  elastalert_logs: {}
+
+configs:
+  logstash_cofig:
+    file: ./logstash/logstash.conf
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.3.2
+    networks:
+      - monitoring
+    environment:
+      ES_JAVA_OPTS: '-Xms256m -Xmx256m'
+      xpack.security.enabled: 'false'
+      xpack.monitoring.enabled: 'false'
+      xpack.graph.enabled: 'false'
+      xpack.watcher.enabled: 'false'
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == abhisheks
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:5.3.2
+    networks:
+      - monitoring
+    configs:
+      - source: logstash_cofig
+        target: /usr/share/logstash/pipeline/logstash.conf
+    #volumes:
+    #  - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - elasticsearch
+    deploy:
+      replicas: 1
+
+  logspout:
+    image: bekt/logspout-logstash
+    networks:
+      - monitoring
+    environment:
+      ROUTE_URIS: 'logstash://logstash:5000'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - logstash
+    deploy:
+      mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.3.2
+    networks:
+      - monitoring
+    ports:
+      - '80:5601'
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+      XPACK_SECURITY_ENABLED: 'false'
+      XPACK_MONITORING_ENABLED: 'false'
+    deploy:
+      replicas: 1
+
+  elastalert:
+        #image: ivankrizsan/elastalert:0.1.8
+    image: cueops/elastalert:v2
+    ports:
+        - "3030:3030"
+    networks:
+        - monitoring
+    depends_on:
+        - elasticsearch
+    environment:
+        - SLACK_URL=${SLACK_URL:-https://hooks.slack.com/services/TOKEN}
+        - SLACK_CHANNEL=${SLACK_CHANNEL:-general}
+        - SLACK_USER=${SLACK_USER:-alertmanager}
+        - ELASTALERT_CONFIG=elastalertconfig.yaml
+        - CONFIG_DIR=/opt/config
+        - LOG_DIR=/opt/logs
+        - ELASTALERT_CONFIG=/opt/config/elastalertconfig.yaml
+        - ELASTICSEARCH_PORT=9200
+        - ELASTICSEARCH_HOST=elasticsearch
+        - ELASTALERT_SUPERVISOR_CONF=/opt/config/elastalert_supervisord.conf
+    volumes:
+        #- /var/dockerdata/elastalert/config:/opt/config
+        #- /var/dockerdata/elastalert/rules:/opt/rules
+        - elastalert_logs:/opt/logs
+    deploy:
+        mode: replicated
+        replicas: 1
+        update_config:
+            parallelism: 1
+            delay: 60s
+        restart_policy:
+            condition: on-failure
+            max_attempts: 5
