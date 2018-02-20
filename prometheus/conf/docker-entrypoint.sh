@@ -1,6 +1,9 @@
 #!/bin/sh -e
 
-cat /etc/prometheus/prometheus.yml > /tmp/prometheus.yml
+cat /etc/prometheus/prometheus.yml |\
+ sed "s@#password: <password>#@password: '$PROM_PASSWORD'@g" |\
+  sed "s@#username: <username>#@username: '$PROM_USERNAME'@g" |\
+   sed "s@#prom_ip:<port>#@$PROM_IP:$PROM_PORT@g" > /tmp/prometheus.yml
 cat /etc/prometheus/weave-cortex.yml | \
     sed "s@#password: <token>#@password: '$WEAVE_TOKEN'@g" > /tmp/weave-cortex.yml
 
@@ -16,13 +19,13 @@ SERVICE=$(echo "$job" | cut -d":" -f1)
 PORT=$(echo "$job" | cut -d":" -f2)
 
 cat >>/tmp/prometheus.yml <<EOF
-
+   
   - job_name: '${SERVICE}'
     dns_sd_configs:
     - names:
       - 'tasks.${SERVICE}'
       type: 'A'
-      port: ${PORT}
+      port: ${PORT}    
 EOF
 
 cat >>/tmp/weave-cortex.yml <<EOF
@@ -45,4 +48,3 @@ mv /tmp/weave-cortex.yml /etc/prometheus/weave-cortex.yml
 set -- /bin/prometheus "$@"
 
 exec "$@"
-

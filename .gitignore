@@ -15,3 +15,6 @@
 
 .idea/
 .DS_Store
+
+# All ENV Variables
+deploy.sh

@@ -62,8 +62,8 @@ services:
     networks:
       - net
     environment:
-      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_SECURITY_ADMIN_USER=${GF_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
       #- GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL:-localhost}
       #- GF_SMTP_ENABLED=${GF_SMTP_ENABLED:-false}
@@ -150,9 +150,15 @@ services:
           memory: 64M
 
   prometheus:
-    image: stefanprodan/swarmprom-prometheus:v2.2.0-rc.0
+#    image: stefanprodan/swarmprom-prometheus:v2.2.0-rc.0
+    image: cueops/prom:v3
     networks:
       - net
+    environment:
+      - PROM_USERNAME=${PROM_USERNAME:-admin}
+      - PROM_PASSWORD=${PROM_PASSWORD:-admin}
+      - PROM_IP=${PROM_IP}
+      - PROM_PORT=${PROM_PORT:-9090}
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--web.console.libraries=/etc/prometheus/console_libraries'
