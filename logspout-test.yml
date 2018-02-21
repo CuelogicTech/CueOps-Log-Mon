@@ -1,0 +1,10 @@
+version: "3"
+services:
+  logspout:
+    image: bekt/logspout-logstash
+    environment:
+      ROUTE_URIS: 'logstash+tcp://172.31.22.27:5000'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      mode: global
