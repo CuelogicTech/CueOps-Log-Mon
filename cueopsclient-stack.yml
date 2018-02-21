@@ -139,11 +139,9 @@ services:
     networks:
       - cueops
     environment:
-      ROUTE_URIS: 'logstash://logstash:5000'
+      ROUTE_URIS: 'logstash+tcp://${LOGSTASH_IP}:5000'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - logstash
     deploy:
       mode: global
       restart_policy:
