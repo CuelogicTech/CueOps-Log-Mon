@@ -81,7 +81,7 @@ services:
 
   prometheus:
 #    image: stefanprodan/swarmprom-prometheus:v2.2.0-rc.0
-    image: cueops/prom:v1
+    image: cueops/prometheus-client:v1.0
     networks:
       - cueops
     command:
@@ -135,7 +135,7 @@ services:
 #      retries: 5
 
   logspout:
-    image: bekt/logspout-logstash
+    image: cueops/logspout-logstash:v1.0
     networks:
       - cueops
     environment:

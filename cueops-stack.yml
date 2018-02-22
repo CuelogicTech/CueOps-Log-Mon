@@ -155,7 +155,7 @@ services:
 
   prometheus:
 #    image: stefanprodan/swarmprom-prometheus:v2.2.0-rc.0
-    image: cueops/prom:v3
+    image: cueops/prometheus:v1.0
     networks:
       - cueops
     environment:
@@ -259,7 +259,7 @@ services:
       replicas: 1
 
   logspout:
-    image: bekt/logspout-logstash
+    image: cueops/logspout-logstash:v1.0
     networks:
       - cueops
     environment:
@@ -291,7 +291,7 @@ services:
 
   elastalert:
     #image: ivankrizsan/elastalert:0.1.8
-    image: cueops/elastalert:v2
+    image: cueops/elastalert:v1.0
     ports:
         - "3030:3030"
     networks:
