@@ -1,0 +1,27 @@
+Logging-Monitoring stack Pre-requisites:
+
+Resource Required: Minimum 4GB RAM, 2vCPU
+
+1. To expose Docker daemon metrics in Prometheus put the below configuration in file etc/docker/daemon.json or create the new file if not exist.
+
+{
+  "metrics-addr" : "0.0.0.0:9323",
+  "experimental" : true
+}
+
+2. Allow Prometheus port (default:9090) on Client's VM from CueOPs VM to scrape prometheus data.
+
+3. Allow Logstash port (default:5000) on CueOps VM for Client's VM to collect logs. 
+
+4. ENV Variables Need to be configured:
+
+	Grafana Container - GF_ADMIN_USER, GF_ADMIN_PASSWORD
+	Alertmanager & Elastalert container - SLACK_URL, SLACK_CHANNEL, SLACK_USER
+	Prometheus Container(CueOps VM) - PROM_USERNAME, PROM_PASSWORD, PROM_IP, PROM_PORT
+	caddy(Used for Basic Authentication) - ADMIN_USER, ADMIN_PASSWORD
+	Logspout container on Client Side - LOGSTASH_IP (This will be the IP of Logstash server deployed on CueOps VM)
+
+5. Use the same password for ADMIN_PASSWORD and PROM_PASSWORD as to scape data from Client's VM we need to provide basic authentication. 
+
+6. So whenever we deploy the Logging-Monitoring stack on Client's VM, make sure PROM_PASSWORD should be same as ADMIN_PASSWORD at Client's VM.
+
