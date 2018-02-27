@@ -4,7 +4,7 @@ Resource Required: Minimum 4GB RAM, 2vCPU
 
 1. To expose Docker daemon metrics in Prometheus put the below configuration in file etc/docker/daemon.json or create the new file if not exist. 
 
-**Note: -** Restart docker daemon after saving the changes. 
+Note: - Restart docker daemon after saving the changes. 
 
 {
   "metrics-addr" : "0.0.0.0:9323",
