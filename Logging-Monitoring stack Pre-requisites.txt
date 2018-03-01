@@ -39,6 +39,9 @@ https://github.com/CuelogicTech/CueOps-Log-Mon.git
 
 2. Set Env variables:
 
+ /// these values needs to be set once fetched from ui and needs to be exported as env variable in from where montoring stack is going to deploy. ( deployer api)
+
+
 export ADMIN_USER=Basic auth Username \
 ADMIN_PASSWORD=Basic auth Password \
 SLACK_URL=https://hooks.slack.com/services/SLACK TOKEN \
@@ -49,10 +52,12 @@ GF_ADMIN_PASSWORD=Grafana Password \
 PROM_IP=Client Swarm cluster manager IP
 
 3. run the command:
-sysctl -w vm.max_map_count=262144
+sysctl -w vm.max_map_count=262144  //use this in prerequisite.sh
 
 4. Deploy stack:
-docker stack deploy -c cueops-stack.yml <stack-name>
+docker stack deploy -c cueops-stack.yml <stack-name>  // run this command from ui backend. mount docker sock in ui server
+
+
 
 To deploy Logging and Monitoring stack on Client VM:
 
@@ -60,7 +65,7 @@ To deploy Logging and Monitoring stack on Client VM:
 https://github.com/CuelogicTech/CueOps-Log-Mon.git
 
 2. Set ENV Variable:
-LOGSTASH_IP= IP of cueops VM
+LOGSTASH_IP= IP of cueops VM    //this will be fired from deployer api , deployer api needs LOG STASH IP, env variable 
 
 3. Deploy the stack:
-docker stack deploy -c cueopsclient-stack.yml <stack name>
+docker stack deploy -c cueopsclient-stack.yml <stack name>  // this will be fired from deployer 
