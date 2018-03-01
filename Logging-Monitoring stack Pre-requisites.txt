@@ -28,3 +28,39 @@ Note: - Restart docker daemon after saving the changes.
 6. So whenever we deploy the Logging-Monitoring stack on Client's VM, make sure PROM_PASSWORD should be same as ADMIN_PASSWORD at Client's VM.
 
 7. For Elastcisearch OOM exception run command : sysctl -w vm.max_map_count=262144
+
+Steps to Deploy Stacks:
+
+To deploy Logging and Monitoring stack on CueOps VM:
+
+1. Clone the repository:
+
+https://github.com/CuelogicTech/CueOps-Log-Mon.git
+
+2. Set Env variables:
+
+export ADMIN_USER=Basic auth Username \
+ADMIN_PASSWORD=Basic auth Password \
+SLACK_URL=https://hooks.slack.com/services/SLACK TOKEN \
+SLACK_CHANNEL=Slack channel name (without hash) \
+SLACK_USER=Slack user \
+GF_ADMIN_USER=Grafana Username \
+GF_ADMIN_PASSWORD=Grafana Password \
+PROM_IP=Client Swarm cluster manager IP
+
+3. run the command:
+sysctl -w vm.max_map_count=262144
+
+4. Deploy stack:
+docker stack deploy -c cueops-stack.yml <stack-name>
+
+To deploy Logging and Monitoring stack on Client VM:
+
+1. Clone the repo:
+https://github.com/CuelogicTech/CueOps-Log-Mon.git
+
+2. Set ENV Variable:
+LOGSTASH_IP= IP of cueops VM
+
+3. Deploy the stack:
+docker stack deploy -c cueopsclient-stack.yml <stack name>
