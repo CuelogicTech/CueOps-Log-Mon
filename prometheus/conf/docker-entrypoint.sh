@@ -1,8 +1,6 @@
 #!/bin/sh -e
 
 cat /etc/prometheus/prometheus.yml |\
- sed "s@#password: <password>#@password: '$PROM_PASSWORD'@g" |\
-  sed "s@#username: <username>#@username: '$PROM_USERNAME'@g" |\
    sed "s@#prom_ip:<port>#@$PROM_IP:$PROM_PORT@g" > /tmp/prometheus.yml
 cat /etc/prometheus/weave-cortex.yml | \
     sed "s@#password: <token>#@password: '$WEAVE_TOKEN'@g" > /tmp/weave-cortex.yml

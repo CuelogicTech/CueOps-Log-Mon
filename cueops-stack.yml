@@ -159,8 +159,8 @@ services:
     networks:
       - cueops
     environment:
-      - PROM_USERNAME=${PROM_USERNAME:-admin}
-      - PROM_PASSWORD=${PROM_PASSWORD:-admin}
+#      - PROM_USERNAME=${PROM_USERNAME:-admin}
+#      - PROM_PASSWORD=${PROM_PASSWORD:-admin}
       - PROM_IP=${PROM_IP:-localhost}
       - PROM_PORT=${PROM_PORT:-9090}
     command:
