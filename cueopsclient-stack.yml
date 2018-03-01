@@ -82,6 +82,8 @@ services:
   prometheus:
 #    image: stefanprodan/swarmprom-prometheus:v2.2.0-rc.0
     image: cueops/prometheus-client:v1.0
+    ports:
+      - "9090:9090"
     networks:
       - cueops
     command:
