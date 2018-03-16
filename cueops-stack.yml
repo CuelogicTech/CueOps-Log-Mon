@@ -91,7 +91,8 @@ services:
           memory: 64M
 
   alertmanager:
-    image: stefanprodan/swarmprom-alertmanager:v0.14.0
+#    image: stefanprodan/swarmprom-alertmanager:v0.14.0
+    image: cueops/alertmanager:v1.0
     networks:
       - cueops
     environment:
@@ -292,7 +293,7 @@ services:
 
   elastalert:
     #image: ivankrizsan/elastalert:0.1.8
-    image: cueops/elastalert:v1.0
+    image: cueops/elastalert:v1.1
     ports:
         - "3030:3030"
     networks:
